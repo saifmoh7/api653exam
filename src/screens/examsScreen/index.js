@@ -38,10 +38,10 @@ function ExamsScreen({navigation}) {
     }
   }
 
-  const SelectedExam = (selectedExamId) => {
-    console.log(selectedExamId)
-    if (selectedExamId) {
-      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId}});
+  const SelectedExam = (selectedExamId, noQues) => {
+    console.log(selectedExamId, noQues)
+    if (selectedExamId && noQues) {
+      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues}});
     } else {
       
     }
@@ -82,7 +82,7 @@ function ExamsScreen({navigation}) {
         renderItem = {({item: exam}) => (
           <TouchableOpacity
             onPress={() => {
-              SelectedExam(exam._id)
+              SelectedExam(exam._id, exam.noQues)
             }}
             style = {{...styles.tExamContainer}}
           >

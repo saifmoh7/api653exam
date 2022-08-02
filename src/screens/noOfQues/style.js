@@ -3,17 +3,24 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     master: {
         display: 'flex',
-        alignItems : 'center',
+        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor : "#242B3E",
+        backgroundColor: "#242B3E",
         width: '100%',
         height: '100%'
     },
 
     formContainer: {
-        height: '50%',
+        height: '60%',
         width: '60%',
-        backgroundColor : "#ffffff",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#2E425A",
+        // borderWidth: 2,
+        // borderColor: '#ffffff',
+        borderRadius: 20
     }
 })    
 
