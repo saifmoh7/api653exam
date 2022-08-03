@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, Text, View } from 'react-native'
+import { getQuestionsList } from '../../utiles/database';
 import styles from './style';
 
 function QuestionsScreen({navigation, route}) {
@@ -8,8 +9,35 @@ function QuestionsScreen({navigation, route}) {
   const timer = route.params.timer
   const noOfQ = route.params.noOfQ
 
+  const [refreshing, setRefreshing] = useState(false)
 
-    
+  const getQuestions = async(examId) => {
+    setRefreshing(true)
+    try {
+      const questionsList = await getQuestionsList(examId)
+      console.log({questionsList})
+
+      let tempQuestions = []
+
+      await questionsList.questions.forEach(async question => {
+        tempQuestions.push({question})
+      });
+
+      
+      console.log({tempQuestions})
+
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    console.log(examId)
+    getQuestions(examId)
+    // getQuestionList(examId)
+  },[])
+
   return (
     <SafeAreaView style = {{...styles.master}}>
       <View style = {{...styles.header}}>

@@ -8,3 +8,12 @@ export const getExamsList = async() => {
         return error
     }
 }
+
+export const getQuestionsList = async(examId) => {
+    try {
+        const {data} = await Axios.post('http://192.168.37.190:5000/api/questions/showquestions', {examId});
+        return data;
+    } catch (error) {
+        return error
+    }
+}
