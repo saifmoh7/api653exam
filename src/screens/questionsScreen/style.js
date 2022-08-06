@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     master: {
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
         // justifyContent: 'flex-start',
         // flexDirection: 'column',
+        // marginTop: 10,
         width: '90%',
     },
 
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         width: '100%',
-        backgroundColor: '#CCDDE7',
+        // backgroundColor: '#CCDDE7',
         padding: 5,
         marginVertical: 10,
         borderRadius: 30
@@ -113,6 +115,31 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         borderBottomColor: '#ffffff',
         borderBottomWidth: 2
+    },
+
+    iconContainer: {
+        backgroundColor: '#007ACC',
+        borderRadius: 20,
+        padding: 2,
+        position: 'absolute',
+        bottom: '3%',
+        right:'3%'
+    },
+
+    resultsContainer: {
+        backgroundColor: '#007ACC',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        borderRadius: 20,
+        padding: 2,
+        position: 'absolute',
+        width: '50%',
+        height: '50%',
+        bottom: '25%',
+        right: '25%'
+        // right:'3%'
     }
 
 
