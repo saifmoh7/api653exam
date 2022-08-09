@@ -8,26 +8,32 @@ function NoOfQues({navigation, route}) {
 
   const examId = route.params.selectedExamId;
   const noQues = route.params.noQues
+  const userName = route.params.userName
 
   const [timer, setTimer] = useState('');
   const [noOfQ, setNoofq] = useState('');
 
   const checkNoOfQues = async  () => {
-    console.log(noQues)
-    if (noOfQ < 2) {
+    if (noOfQ.trim().length == 0) {
+      ToastAndroid.show('Number of Question is Empty', ToastAndroid.SHORT);
+    }
+    else if (noOfQ < 2) {
       ToastAndroid.show('Number of Question is to Small', ToastAndroid.SHORT);
     }
-    if (noOfQ > noQues) {
+    else if (noOfQ > noQues) {
       ToastAndroid.show('Number of Question is to Long', ToastAndroid.SHORT);
     }
-    if (timer < 1) {
+    else if (timer.trim().length == 0) {
+      ToastAndroid.show('Time for Exam is Empty', ToastAndroid.SHORT);
+    }
+    else if (timer < 1) {
       ToastAndroid.show('Time for Exam is to Small', ToastAndroid.SHORT);
     }
-    if (timer > 300) {
+    else if (timer > 300) {
       ToastAndroid.show('Time for Exam is to Long', ToastAndroid.SHORT);
     }
-    if (noOfQ > 2 && noOfQ <= noQues && timer < 300 && timer >= 1){
-      navigation.navigate({name : 'QuestionsScreen',params:{examId, noOfQ, timer}});
+    else{
+      navigation.navigate({name : 'QuestionsScreen',params:{examId, noOfQ, timer, userName}});
       ToastAndroid.show('ok', ToastAndroid.SHORT);
     }
   }
@@ -42,6 +48,7 @@ function NoOfQues({navigation, route}) {
                 value={noOfQ}
                 keyboardType={"numeric"}
                 maxLength = {3}
+                signin={false}
             />
 
             <FormInput
@@ -51,6 +58,7 @@ function NoOfQues({navigation, route}) {
                 value={timer}
                 keyboardType={"numeric"}
                 maxLength = {3}
+                signin={false}
             />
 
             <View>

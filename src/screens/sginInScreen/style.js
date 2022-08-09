@@ -10,6 +10,24 @@ const styles = StyleSheet.create({
         height: '100%'
     },
 
+    headerContainer: {
+        display: "flex",
+        flexDirection : 'row',
+        justifyContent : 'space-evenly',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor:'#2E425A',
+        height: 85,
+        width: '100%',
+        borderBottomLeftRadius : 30,
+        borderBottomRightRadius : 30,
+    },
+
+    appName: {
+        color: '#ffffff',
+        fontSize: 20
+    },
+
     scrollView: {
         // backgroundColor: "#000000",
         width: '100%',

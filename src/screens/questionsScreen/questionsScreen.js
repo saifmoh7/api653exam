@@ -11,6 +11,7 @@ function QuestionsScreen({navigation, route}) {
   const examId = route.params.examId;
   const time = route.params.timer*60
   const noOfQ = route.params.noOfQ
+  const userName = route.params.userName
 
   const intervalRef = useRef(null);
 
@@ -95,6 +96,7 @@ function QuestionsScreen({navigation, route}) {
       clearInterval(intervalRef.current);
       setSubmit(true)
       setShowResults(true)
+      saveResults()
       console.log("timeup")
     }
   }
@@ -160,6 +162,10 @@ function QuestionsScreen({navigation, route}) {
     }
   }
 
+  const saveResults = () => {
+    console.log(userName)
+  }
+
   useEffect(() => {
     getQuestions(examId)
 
@@ -179,6 +185,46 @@ function QuestionsScreen({navigation, route}) {
           <Text>{timer} sec</Text>
         </View>
       </View>
+
+      {
+        showResults ? 
+          <View style = {{...styles.resultsContainer}}>
+            <View style = {{...styles.imageContainer}}>
+              <Image
+              resizeMode="contain"
+              source={(state.correctCount*100/noOfQ) >= 50 ? win : fail}
+              style = {{width : "60%", height : "80%"}}
+              />
+              <Text>
+                {state.correctCount*100/noOfQ}% Score
+              </Text>
+            </View>
+            <View style = {{...styles.resultsrow}}>
+              <View style = {{...styles.resultsColumn}}>
+                <Text>
+                  Total Questions: {noOfQ}
+                </Text>
+                <Text>
+                  Correct Awnser: {state.correctCount}
+                </Text>
+                <Text>
+                  Total Time: {examTimer(time)}
+                </Text>
+              </View>
+              <View style = {{...styles.resultsColumn}}>
+                <Text>
+                  Question Not Attmpeted: {state.notattmpeted}
+                </Text>
+                <Text>
+                  Incorrect Awnser: {state.incorrectCount}
+                </Text>
+                <Text>
+                  Spend Time: {examTimer(examTime)}
+                </Text>
+              </View>
+            </View>
+          </View> : <React.Fragment></React.Fragment>
+      }
 
       <FlatList
         data = {questions.map((question,index)=>({ index,...question}))}
@@ -249,12 +295,13 @@ function QuestionsScreen({navigation, route}) {
               color = "#ffffff"
               onPress = {() => {
                 setShowResults(true)
+                saveResults()
                 setSubmit(true)
                 clearInterval(intervalRef.current)
               }}
           />
       </View>
-      {
+      {/* {
         showResults ? 
           <View style = {{...styles.resultsContainer}}>
             <Image
@@ -284,7 +331,7 @@ function QuestionsScreen({navigation, route}) {
               Spend Time: {examTimer(examTime)}
             </Text>
           </View> : <React.Fragment></React.Fragment>
-      }
+      } */}
     </SafeAreaView>
   )
 }

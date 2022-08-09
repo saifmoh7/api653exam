@@ -6,11 +6,14 @@ const FormInput = ({
   placeholderText = '',
   onChangeText = null,
   value = null,
+  keyboardType = null,
   maxLength = null,
+  secureTextEntry= null,
+  signin= null,
   ...more
 }) => {
   return (
-    <View style={{width: '60%', marginBottom: 20, alignItems : "center"}}>
+    <View style={{width: '60%', marginBottom: 20, alignItems : signin ? 'flex-start' : 'center'}}>
       <Text
       style={{color: "white"}}>
       {labelText}
@@ -24,14 +27,17 @@ const FormInput = ({
           borderColor: "black",
           borderWidth: 1,
           width: '100%',
-          borderRadius: 30,
+          borderRadius: 15,
           marginTop: 10,
-          textAlign: 'center',
+          textAlign: signin ? 'left' : 'center',
         }}
         placeholder={placeholderText}
+        placeholderTextColor='#848484'
         onChangeText={onChangeText}
         value={value}
         maxLength = {maxLength}
+        keyboardType = {keyboardType}
+        secureTextEntry = {secureTextEntry}
         {...more}
       />
     </View>

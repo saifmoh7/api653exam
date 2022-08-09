@@ -1,13 +1,14 @@
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, Image, SafeAreaView, ScrollView, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, Image, SafeAreaView, FlatList } from 'react-native'
 import Footer from '../../components/footer';
-import Header from '../../components/header';
 import Icon from '../../components/icons';
 import { getExamsList } from '../../utiles/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 
-function ExamsScreen({navigation}) {
+function ExamsScreen({navigation, route}) {
+
+  const userName = route.params.username
 
   const [allExames, setAllExames] = useState([])
   const [refreshing, setRefreshing] = useState(false);
@@ -20,20 +21,31 @@ function ExamsScreen({navigation}) {
       const examsList = await getExamsList()
 
       let tempExams = [];
-
+     
       await examsList.exams.forEach(async exam => {
         tempExams.push({...exam});
       });
 
       if (tempExams) {
         setAllExames([...tempExams]);
-        console.log(tempExams[1])
+        await AsyncStorage.setItem('exams', JSON.stringify([...tempExams]))
+        
       } else {
         console.log("not found")
       }
       setRefreshing(false);
     } catch (error) {
       console.log(error)
+      try {
+        const examData = await AsyncStorage.getItem('exams')
+        if (examData !== null) {
+          let data = JSON.parse(examData)
+          console.log(data);
+          setAllExames(data)
+        }
+      } catch (error) {
+        console.log(error)
+      }
       setRefreshing(false);
     }
   }
@@ -41,7 +53,7 @@ function ExamsScreen({navigation}) {
   const SelectedExam = (selectedExamId, noQues) => {
     console.log(selectedExamId, noQues)
     if (selectedExamId && noQues) {
-      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues}});
+      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues, userName}});
     } else {
       
     }
@@ -53,7 +65,47 @@ function ExamsScreen({navigation}) {
 
   return (
     <SafeAreaView style = {{...styles.master}}>
-      <Header/>
+      <View style = {{...styles.headerContainer}}>
+        <View>
+            <Icon
+                icon = "menu"
+                size = {25}
+                color = "#ffffff"
+                onPress = {async() => {
+                  console.log(userName)
+                }}
+            />
+        </View>
+        <View>
+            <Text style = {{...styles.appName}}>
+                API 653 EXAM APP
+            </Text>
+        </View>
+        {
+          userName ? 
+            <View>
+            <Icon
+                icon = "signout"
+                size = {25}
+                color = "#ffffff"
+                onPress = {async() => {
+                  await AsyncStorage.removeItem('userData')
+                  navigation.navigate({name : 'SignInScreen'});
+                }}
+            />
+            </View> : 
+            <View style = {{...styles.icon}}>
+                <Icon
+                icon = "signin"
+                size = {25}
+                    color = "#ffffff"
+                onPress={() => {
+                  navigation.navigate({name : 'SignInScreen'});
+                }}
+                />
+            </View>
+        }
+      </View>
 
       <TouchableOpacity
         onPress={() => {
@@ -63,12 +115,16 @@ function ExamsScreen({navigation}) {
         <View style = {{...styles.scoreContainer}}>
           <View style = {{...styles.score}}>
             <Text>High Score</Text>
-            <Text>70%</Text>
+            {
+              userName !== null ? userName ? <Text>70%</Text> : <Text>Go to Sign In</Text> : <Text>Go to Sign In</Text>
+            }
           </View>
           <View style = {{...styles.line}}></View>
           <View style = {{...styles.score}}>
             <Text>Latest Score</Text>
-            <Text>50%</Text>
+            {
+              userName !== null ? userName ? <Text>70%</Text> : <Text>Go to Sign In</Text> : <Text>Go to Sign In</Text>
+            }
           </View>
         </View>
       </TouchableOpacity>

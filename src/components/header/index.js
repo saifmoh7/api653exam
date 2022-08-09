@@ -3,28 +3,34 @@ import { View, Text } from 'react-native'
 import Icon from '../icons';
 import styles from './style';
 
-function Header() {
+function Header({signin=null}) {
   return (
     <View style = {{...styles.headerContainer}}>
-        <View>
+        {
+            !signin ? 
+            <View>
             <Icon
                 icon = "menu"
                 size = {25}
                 color = "#ffffff"
             />
-        </View>
+            </View> : <React.Fragment></React.Fragment>
+        }
         <View>
             <Text style = {{...styles.appName}}>
                 API 653 EXAM APP
             </Text>
         </View>
-        <View>
+        {
+            !signin ? 
+            <View>
             <Icon
                 icon = "login"
                 size = {25}
                 color = "#ffffff"
             />
-        </View>
+            </View> : <React.Fragment></React.Fragment>
+        }
     </View>
   )
 }

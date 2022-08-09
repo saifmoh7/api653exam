@@ -127,23 +127,45 @@ const styles = StyleSheet.create({
     },
 
     resultsContainer: {
-        backgroundColor: '#007ACC',
+        backgroundColor: '#333f5f',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
         borderRadius: 20,
         padding: 2,
-        position: 'absolute',
-        width: '50%',
+        width: '100%',
+        height: '25%'
+    },
+
+    imageContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        padding: 2,
+        margin: 0,
+        width: '100%',
         height: '50%',
-        bottom: '25%',
-        right: '25%'
-        // right:'3%'
-    }
+    },
 
+    resultsrow: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        padding: 2,
+        width: '100%',
+    },
 
-
+    resultsColumn: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        paddingLeft: 7,
+        width: '45%',
+    },
 
 })    
 
