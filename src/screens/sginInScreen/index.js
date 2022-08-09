@@ -1,9 +1,11 @@
-import { View, Text, TouchableOpacity, ToastAndroid, ScrollView, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, ToastAndroid, ScrollView, SafeAreaView } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import styles from './style';
 import FormInput from '../../components/formInput';
 import Icon from '../../components/icons';
-import { signIn } from '../../utiles/database';
+import { signIn, signUp } from '../../utiles/database';
+import Footer from '../../components/footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = ({navigation}) => {
 
@@ -26,24 +28,68 @@ const SignInScreen = ({navigation}) => {
     else if (confirmPassword.trim().length == 0 && signup) {
       ToastAndroid.show('Confirm Password Name Is Empty', ToastAndroid.SHORT);
     }
+    else if (signup && confirmPassword !== password) {
+      ToastAndroid.show('Password Is Different', ToastAndroid.SHORT);
+    }
     else{
       if (signup) {
-        console.log(userName, email, password)
+        const data = await signUp(userName, email, password)
+        if (data.name && data.email){
+          console.log(data.name, data.email)
+          ToastAndroid.show('Sign Up is Success', ToastAndroid.SHORT);
+          setSignup(false)
+        }
       } else {
         const data = await signIn(email, password)
         if (data.name && data.email){
           let username = data.name
           let emailAddress = data.email
-          console.log(username, emailAddress)
+          let userData = {username, emailAddress}
+          await AsyncStorage.setItem(
+            'userData',
+            JSON.stringify(userData),
+            async e=>{
+              let userData = await AsyncStorage.getItem('userData')
+              console.log(userData)
+            }
+            )
           navigation.navigate({name : 'ExamsScreen',params:{username, emailAddress}});
         }
       }
     }
   }
 
+  const getUserData = async() => {
+    try {
+      const userData = await AsyncStorage.getItem('userData')
+      if (userData !== null) {
+        let username = userData.username
+        let emailAddress = userData.email
+        console.log(userData)
+        if (userData) {
+          navigation.navigate({name : 'ExamsScreen',params:{username, emailAddress}});
+        }else{
+          console.log('no User Data')
+        }
+      }
+      else{console.log({userData})}
+    } catch (error) {
+      console.log({error})
+    }
+  }
+
+  useEffect(() => {
+    getUserData()
+  },[])
+
 
   return (
     <SafeAreaView style = {{...styles.master}}>
+        <View style = {{...styles.headerContainer}}>
+            <Text style = {{...styles.appName}}>
+                API 653 EXAM APP
+            </Text>
+        </View>
         <ScrollView style = {{...styles.scrollView}}>
         
         <View style = {{...styles.formContainer}}>
@@ -56,6 +102,7 @@ const SignInScreen = ({navigation}) => {
                   value={userName}
                   keyboardType= ""
                   maxLength = {25}
+                  signin={true}
               /> : <React.Fragment></React.Fragment>
           }  
           <FormInput
@@ -65,6 +112,7 @@ const SignInScreen = ({navigation}) => {
                     value={email}
                     keyboardType= "email-address"
                     maxLength = {25}
+                    signin={true}
                 />
 
           <FormInput
@@ -75,6 +123,7 @@ const SignInScreen = ({navigation}) => {
                     keyboardType= ""
                     secureTextEntry={true}
                     maxLength = {25}
+                    signin={true}
                 />
 
           {
@@ -87,6 +136,7 @@ const SignInScreen = ({navigation}) => {
                   keyboardType= ""
                   secureTextEntry={true}
                   maxLength = {25}
+                  signin={true}
               /> : <React.Fragment></React.Fragment>
           }
         </View>     
@@ -100,6 +150,19 @@ const SignInScreen = ({navigation}) => {
                       onPress={() => {
                         checkNoOfQues()
                       }}
+                  />
+          </View>
+          <View style = {{...styles.icon}}>
+                  <Icon
+                  icon = "home"
+                  size = {60}
+                  color = "#E78230"
+                  onPress={() => {
+                    setEmail("")
+                    setPassword("")
+                    setConfirmPassword("")
+                    navigation.navigate({name : 'ExamsScreen',params:{username: false}});
+                  }}
                   />
           </View>
           {
@@ -134,6 +197,7 @@ const SignInScreen = ({navigation}) => {
           }            
         </View>          
       </ScrollView>
+      <Footer/>
     </SafeAreaView>
   )
 }
