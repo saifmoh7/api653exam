@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 5,
         padding: 5,
-        height: 450
     },
 
     question: {
@@ -66,6 +65,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginVertical: 25,
         width: '100%',
+    },
+
+    imageQuestion: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 150,
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: "#CCDDE7"
     },
 
     optionsContainer: {
@@ -82,7 +91,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         width: '100%',
-        // backgroundColor: '#CCDDE7',
         padding: 5,
         marginVertical: 10,
         borderRadius: 30
@@ -133,6 +141,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         borderRadius: 20,
+        marginTop: 10,
         padding: 2,
         width: '100%',
         height: '25%'

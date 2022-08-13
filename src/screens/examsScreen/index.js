@@ -6,13 +6,16 @@ import { getExamsList } from '../../utiles/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 
-function ExamsScreen({navigation, route}) {
-
-  const userName = route.params.username
+function ExamsScreen(props) {
+  let {navigation, route, ...attr} = props
+  console.log(route.params)
+  const userName = props?.username || route?.params?.username 
 
   const [allExames, setAllExames] = useState([])
   const [refreshing, setRefreshing] = useState(false);
   const [showDes, setShowDes] = useState([])
+  const [highScore, setHighScore] = useState()
+  const [latestScore, setLatestScore] = useState()
   const [examId, setExamId] = useState("")
 
   const getExams = async() => {
@@ -50,17 +53,47 @@ function ExamsScreen({navigation, route}) {
     }
   }
 
-  const SelectedExam = (selectedExamId, noQues) => {
-    console.log(selectedExamId, noQues)
+  const SelectedExam = (selectedExamId, noQues, examTitle) => {
     if (selectedExamId && noQues) {
-      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues, userName}});
+      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues, examTitle, userName}});
     } else {
       
     }
   }
 
+  const _retrieveData = async () => {
+    try {
+      var value = await AsyncStorage.getItem('your_Scores');
+      console.log(value)
+      value = value===null ? [] : JSON.parse(value)
+      let latestvalue = value[value.length-1]
+      console.log({latestvalue})
+      if (typeof latestvalue !== 'object') {
+        latestvalue = 0;
+      }else{
+        latestvalue = latestvalue.score
+      }
+      let highvalue = value.sort(({'score':score1}, {'score':score2}) => score1<score2 ? 1 : (score1>score2 ? -1 : 0))
+      // console.log({highvalue})
+      if (typeof highvalue[0] !== 'object') {
+        highvalue = 0;
+      }else{
+        // console.log(highvalue[0])
+        highvalue = highvalue[0].score
+      }
+        // setAllScore(value)
+        setHighScore(highvalue)
+        setLatestScore(latestvalue)
+        // console.log(highvalue);
+        // console.log(latestvalue)
+    } catch (error) {
+      console.log(error.message)
+    }
+  };
+
   useEffect(() => {
     getExams()
+    _retrieveData()
   },[])
 
   return (
@@ -71,8 +104,10 @@ function ExamsScreen({navigation, route}) {
                 icon = "menu"
                 size = {25}
                 color = "#ffffff"
-                onPress = {async() => {
-                  console.log(userName)
+                onPress = { async() => {
+                  // await AsyncStorage.removeItem('your_Scores')
+                  // _retrieveData()
+                  // navigation.navigate({name : 'ScoresScreen'});
                 }}
             />
         </View>
@@ -91,6 +126,7 @@ function ExamsScreen({navigation, route}) {
                 onPress = {async() => {
                   await AsyncStorage.removeItem('userData')
                   navigation.navigate({name : 'SignInScreen'});
+                  console.log(await AsyncStorage.getItem('userData'))
                 }}
             />
             </View> : 
@@ -107,23 +143,34 @@ function ExamsScreen({navigation, route}) {
         }
       </View>
 
+      {
+        userName ? 
+        <View>
+          <Text style = {{...styles.appName}}>
+              Welcome {userName}
+          </Text>
+        </View> : <React.Fragment></React.Fragment>
+      }
+
       <TouchableOpacity
+        disabled={!userName}
         onPress={() => {
-          console.log("scores")
+          console.log(userName)
+          navigation.navigate({name : 'ScoresScreen'});
         }}
       >
         <View style = {{...styles.scoreContainer}}>
           <View style = {{...styles.score}}>
             <Text>High Score</Text>
             {
-              userName !== null ? userName ? <Text>70%</Text> : <Text>Go to Sign In</Text> : <Text>Go to Sign In</Text>
+              userName !== null ? userName ? <Text>{highScore}%</Text> : <Text>Go to Sign In</Text> : <Text>Go to Sign In</Text>
             }
           </View>
           <View style = {{...styles.line}}></View>
           <View style = {{...styles.score}}>
             <Text>Latest Score</Text>
             {
-              userName !== null ? userName ? <Text>70%</Text> : <Text>Go to Sign In</Text> : <Text>Go to Sign In</Text>
+              userName !== null ? userName ? <Text>{latestScore}%</Text> : <Text>Go to Sign In</Text> : <Text>Go to Sign In</Text>
             }
           </View>
         </View>
@@ -138,7 +185,7 @@ function ExamsScreen({navigation, route}) {
         renderItem = {({item: exam}) => (
           <TouchableOpacity
             onPress={() => {
-              SelectedExam(exam._id, exam.noQues)
+              SelectedExam(exam._id, exam.noQues, exam.examTitle)
             }}
             style = {{...styles.tExamContainer}}
           >

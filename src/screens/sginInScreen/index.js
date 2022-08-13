@@ -35,7 +35,7 @@ const SignInScreen = ({navigation}) => {
       if (signup) {
         const data = await signUp(userName, email, password)
         if (data.name && data.email){
-          console.log(data.name, data.email)
+          // console.log(data.name, data.email)
           ToastAndroid.show('Sign Up is Success', ToastAndroid.SHORT);
           setSignup(false)
         }
@@ -63,10 +63,11 @@ const SignInScreen = ({navigation}) => {
     try {
       const userData = await AsyncStorage.getItem('userData')
       if (userData !== null) {
-        let username = userData.username
-        let emailAddress = userData.email
-        console.log(userData)
-        if (userData) {
+        let user_Data = JSON.parse(userData)
+        let username = user_Data.username
+        let emailAddress = user_Data.email
+        console.log(user_Data)
+        if (user_Data) {
           navigation.navigate({name : 'ExamsScreen',params:{username, emailAddress}});
         }else{
           console.log('no User Data')

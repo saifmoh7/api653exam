@@ -8,6 +8,7 @@ function NoOfQues({navigation, route}) {
 
   const examId = route.params.selectedExamId;
   const noQues = route.params.noQues
+  const examTitle = route.params.examTitle
   const userName = route.params.userName
 
   const [timer, setTimer] = useState('');
@@ -33,7 +34,7 @@ function NoOfQues({navigation, route}) {
       ToastAndroid.show('Time for Exam is to Long', ToastAndroid.SHORT);
     }
     else{
-      navigation.navigate({name : 'QuestionsScreen',params:{examId, noOfQ, timer, userName}});
+      navigation.navigate({name : 'QuestionsScreen',params:{examId, examTitle, noOfQ, timer, userName}});
       ToastAndroid.show('ok', ToastAndroid.SHORT);
     }
   }

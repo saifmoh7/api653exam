@@ -3,12 +3,15 @@ import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View
 import Icon from '../../components/icons';
 import { getQuestionsList } from '../../utiles/database';
 import styles from './style';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { off } from 'npm';
 const win = require('../../images/win.png')
 const fail = require('../../images/fail.png')
 
 function QuestionsScreen({navigation, route}) {
 
   const examId = route.params.examId;
+  const examTitle = route.params.examTitle.toString()
   const time = route.params.timer*60
   const noOfQ = route.params.noOfQ
   const userName = route.params.userName
@@ -41,10 +44,32 @@ function QuestionsScreen({navigation, route}) {
       let tempQues = shuffleArray([...tempQuestions])
       
       setQuestions(tempQues)
+      await AsyncStorage.setItem(examTitle, JSON.stringify(tempQues))
 
       setRefreshing(false)
     } catch (error) {
       console.log(error)
+      try {
+        const questionData = await AsyncStorage.getItem(examTitle)
+        if (questionData !== null) {
+          let data = JSON.parse(questionData)
+
+          let tempQuestions = []
+
+          await data.forEach(async question => {
+
+            question.options = shuffleArray([question.option_1, question.option_2, question.option_3, question.option_4])
+
+            tempQuestions.push(question)
+          });
+          
+          let tempQues = shuffleArray([...tempQuestions])
+          console.log(tempQues);
+          setQuestions(tempQues)
+        }
+      } catch (error) {
+        console.log(error)
+      }
       setRefreshing(false)
     }
   }
@@ -96,7 +121,7 @@ function QuestionsScreen({navigation, route}) {
       clearInterval(intervalRef.current);
       setSubmit(true)
       setShowResults(true)
-      saveResults()
+      // saveResults()
       console.log("timeup")
     }
   }
@@ -162,9 +187,53 @@ function QuestionsScreen({navigation, route}) {
     }
   }
 
-  const saveResults = () => {
-    console.log(userName)
-  }
+  const saveResults = async (examTitle, totalQuestions, notattmpeted, correctAnswer, incorrectCount, totalTime, spendTime)  => {
+          try {
+            let oldYourScores = await AsyncStorage.getItem('your_Scores')
+            if (oldYourScores === null) {
+              oldYourScores = []
+            }else{
+              oldYourScores =  JSON.parse(oldYourScores)
+            }
+
+            var date = new Date().getDate(); //To get the Current Date
+            var month = new Date().getMonth() + 1; //To get the Current Month
+            var year = new Date().getFullYear(); //To get the Current Year
+            var hours = new Date().getHours(); //To get the Current Hours
+            var min = new Date().getMinutes(); //To get the Current Minutes
+            var sec = new Date().getSeconds(); //To get the Current Seconds
+
+            let currntDate = date + '/' + month + '/' + year + '(' + hours + ':' + min + ':' + sec  + ')'
+            let score = Math.round(correctAnswer*100/totalQuestions)
+      
+            let your_Scores = [
+              ...oldYourScores,
+              {
+                examTitle,
+                score,
+                totalQuestions,
+                notattmpeted,
+                correctAnswer,
+                incorrectCount,
+                totalTime,
+                spendTime,
+                currntDate
+              }
+            ]
+            console.log(currntDate)
+            
+            await AsyncStorage.setItem(
+              'your_Scores',
+              JSON.stringify(your_Scores),
+              async e=>{
+                let yourScores = await AsyncStorage.getItem('your_Scores')
+                console.log(yourScores)
+              }
+            );
+          } catch (error) {
+            console.log(error)
+          }
+      };
 
   useEffect(() => {
     getQuestions(examId)
@@ -173,6 +242,14 @@ function QuestionsScreen({navigation, route}) {
 
     return() => {if (intervalRef.current) clearInterval(intervalRef.current)};
   },[])
+
+  useEffect(() => {
+    if (submit) {
+      saveResults(examTitle, noOfQ, state.notattmpeted, state.correctCount, state.incorrectCount, examTimer(time), examTimer(examTime))
+    } else {
+      console.log({submit})
+    }
+  },[submit])
 
   return (
     <SafeAreaView style = {{...styles.master}}>
@@ -196,7 +273,7 @@ function QuestionsScreen({navigation, route}) {
               style = {{width : "60%", height : "80%"}}
               />
               <Text>
-                {state.correctCount*100/noOfQ}% Score
+                {Math.round(state.correctCount*100/noOfQ)}% Score
               </Text>
             </View>
             <View style = {{...styles.resultsrow}}>
@@ -239,10 +316,21 @@ function QuestionsScreen({navigation, route}) {
                     <View style = {{...styles.question}}>
                       <Text style={{fontSize: 16, color: '#ffffff'}}><Text style = {{color: state.questionsState.hasOwnProperty(question.index.toString()) ? '#28AFEA' : '#ffffff'}}>Q{question.index + 1}</Text> : {question.question}</Text>
                     </View>
+                    {
+                      question.questionImageUrl ? 
+                        <View style = {{...styles.imageQuestion}}>
+                          <Image
+                            resizeMode="contain"
+                            source={{uri: question.questionImageUrl}}
+                            style = {{width : 145, height : 100, borderRadius : 5, backgroundColor: '#ffffff'}}
+                          />
+                        </View> :
+                        <React.Fragment></React.Fragment>
+                    }
                     <View style = {{...styles.optionsContainer}}>
                         {
                           question.options.map((option, optionIndex) => {
-                            return(
+                            return  option ? 
                             <TouchableOpacity
                             disabled={submit}
                             key={optionIndex}
@@ -273,13 +361,13 @@ function QuestionsScreen({navigation, route}) {
                               <View style = {{...styles.option}}>
                                 <Text style={{fontSize: 14, color: '#000000'}}>{option}</Text>
                               </View>
-                            </TouchableOpacity>
-                          )})
+                            </TouchableOpacity> : <React.Fragment></React.Fragment>
+                          })
                         }
                       {
                         submit ? 
                           <View style = {{...styles.ref}}>
-                            <Text style={{fontSize: 16}}>General (API 650 1.1.1)</Text>
+                            <Text style={{fontSize: 16}}>{question.source}</Text>
                           </View> : <React.Fragment></React.Fragment>
                       }
                     </View>
@@ -295,13 +383,19 @@ function QuestionsScreen({navigation, route}) {
               color = "#ffffff"
               onPress = {() => {
                 setShowResults(true)
-                saveResults()
+                // saveResults()
                 setSubmit(true)
                 clearInterval(intervalRef.current)
               }}
           />
       </View>
-      {/* {
+    </SafeAreaView>
+  )
+}
+
+export default QuestionsScreen
+
+{/* {
         showResults ? 
           <View style = {{...styles.resultsContainer}}>
             <Image
@@ -332,11 +426,6 @@ function QuestionsScreen({navigation, route}) {
             </Text>
           </View> : <React.Fragment></React.Fragment>
       } */}
-    </SafeAreaView>
-  )
-}
-
-export default QuestionsScreen
 
 {/* <ScrollView style = {{...styles.questionsContainer}}>
         <View style = {{...styles.questionContainer}}>
