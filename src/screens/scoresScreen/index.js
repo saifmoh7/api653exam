@@ -25,6 +25,12 @@ const ScoresScreen = ({navigation}) => {
     }
   }
 
+  const deleteData = async() => {
+    await AsyncStorage.removeItem('your_Scores')
+    await AsyncStorage.removeItem('userData')
+    navigation.navigate({name : 'UserScreen'});
+  }
+
   useEffect(() => {
     getScores()
   },[])
@@ -48,7 +54,15 @@ const ScoresScreen = ({navigation}) => {
             </Text>
         </View>
         <View>
-        </View>  
+            <Icon
+                icon = "delete"
+                size = {25}
+                color = "#ffffff"
+                onPress = {() => {
+                  deleteData()
+                }}
+            />
+        </View> 
       </View>
 
       <FlatList
