@@ -48,15 +48,6 @@ const ScoresScreen = ({navigation}) => {
             </Text>
         </View>
         <View>
-        <Icon
-            icon = "signout"
-            size = {25}
-            color = "#ffffff"
-            onPress = {async() => {
-              await AsyncStorage.removeItem('userData')
-              navigation.navigate({name : 'SignInScreen'});
-            }}
-        />
         </View>  
       </View>
 
