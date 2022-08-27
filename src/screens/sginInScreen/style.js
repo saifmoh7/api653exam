@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     master: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         backgroundColor: "#242B3E",
         width: '100%',
         height: '100%'

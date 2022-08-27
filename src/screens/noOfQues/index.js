@@ -15,10 +15,11 @@ function NoOfQues({navigation, route}) {
   const [noOfQ, setNoofq] = useState('');
 
   const checkNoOfQues = async  () => {
+    console.log(noQues)
     if (noOfQ.trim().length == 0) {
       ToastAndroid.show('Number of Question is Empty', ToastAndroid.SHORT);
     }
-    else if (noOfQ < 2) {
+    else if (noOfQ < 1) {
       ToastAndroid.show('Number of Question is to Small', ToastAndroid.SHORT);
     }
     else if (noOfQ > noQues) {

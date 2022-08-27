@@ -2,7 +2,7 @@ import Axios, * as others from 'axios';
 
 export const getExamsList = async() => {
     try {
-        const {data} = await Axios.get('http://192.168.37.190:5000/api/exams/showexams');
+        const {data} = await Axios.get('https://peaceful-temple-39268.herokuapp.com/api/exams/showexams');
         return data;
     } catch (error) {
         return error
@@ -11,7 +11,7 @@ export const getExamsList = async() => {
 
 export const getQuestionsList = async(examId) => {
     try {
-        const {data} = await Axios.post('http://192.168.37.190:5000/api/questions/showquestions', {examId});
+        const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/questions/showquestions', {examId});
         return data;
     } catch (error) {
         return error
@@ -20,7 +20,7 @@ export const getQuestionsList = async(examId) => {
 
 export const signUp = async(name, email, password) => {
     try {
-        const {data} = await Axios.post('http://192.168.37.190:5000/api/users/signup', {name, email, password});
+        const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/users/signup', {name, email, password});
         return data;
     } catch (error) {
         return error
@@ -29,7 +29,7 @@ export const signUp = async(name, email, password) => {
 
 export const signIn = async(email, password) => {
     try {
-        const {data} = await Axios.post('http://192.168.37.190:5000/api/users/signin', {email, password});
+        const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/users/signin', {email, password});
         return data;
     } catch (error) {
         return error

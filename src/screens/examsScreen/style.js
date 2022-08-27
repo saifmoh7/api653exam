@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         display: "flex",
         flexDirection : 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         padding: 15,
         backgroundColor:'#2E425A',
