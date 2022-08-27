@@ -7,6 +7,7 @@ import SignInScreen from '../screens/sginInScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, View } from 'react-native';
 import ScoresScreen from '../screens/scoresScreen';
+import UserScreen from '../screens/sginInScreen';
 
 
 var Stack = createStackNavigator();
@@ -16,11 +17,11 @@ const AppStackNavigator = () => {
 
   useEffect( () => {
     (async()=>{
-      var user_Data = await AsyncStorage.getItem('userData')
-      if (user_Data !== null) {
-        let userData = JSON.parse(user_Data)
-        console.log(userData)
-        setUsername(userData.username)
+      var username = await AsyncStorage.getItem('userData')
+      if (username !== null) {
+        let userName = JSON.parse(username)
+        console.log(userName)
+        setUsername(userName)
       } else {
         setUsername(false)
       }
@@ -32,7 +33,7 @@ const AppStackNavigator = () => {
   } else {
     return (
       <Stack.Navigator>
-        <Stack.Screen name="SignInScreen" component={username ? ExamsScreen : SignInScreen} options = {{headerShown: false,}} initialParams={{username}} />
+        <Stack.Screen name="UserScreen" component={username ? ExamsScreen : UserScreen} options = {{headerShown: false,}} />
         <Stack.Screen name="ExamsScreen" component={ExamsScreen} options = {{headerShown: false,}} />
         <Stack.Screen name="NoOfQuestions" component={NoOfQues} options = {{headerShown: false,}} />
         <Stack.Screen name="QuestionsScreen" component={QuestionsScreen} options = {{headerShown: false,}} />
@@ -42,5 +43,6 @@ const AppStackNavigator = () => {
   }
 }
 // username ? ()=> <ExamsScreen username={username} /> : 
+{/* <Stack.Screen name="UserScreen" component={username ? ExamsScreen : UserScreen} options = {{headerShown: false,}} initialParams={{username}} /> */}
 
 export default AppStackNavigator;
