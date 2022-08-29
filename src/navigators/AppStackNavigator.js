@@ -3,33 +3,34 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ExamsScreen from '../screens/examsScreen';
 import NoOfQues from '../screens/noOfQues';
 import QuestionsScreen from '../screens/questionsScreen/questionsScreen';
-import SignInScreen from '../screens/sginInScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View } from 'react-native';
 import ScoresScreen from '../screens/scoresScreen';
 import UserScreen from '../screens/sginInScreen';
+import { Loading } from '../components/loading-version';
 
 
 var Stack = createStackNavigator();
 
 const AppStackNavigator = () => {
+
   const [username, setUsername] = useState('')
 
-  useEffect( () => {
-    (async()=>{
-      var username = await AsyncStorage.getItem('userData')
+  const checkUserName = async() => {
+    var username = await AsyncStorage.getItem('userData')
       if (username !== null) {
         let userName = JSON.parse(username)
-        console.log(userName)
         setUsername(userName)
       } else {
         setUsername(false)
       }
-    })()
-    
-  },[])
+  }
+
+  useEffect(() => {
+    checkUserName();
+  },[username])
+
   if (username==='') {
-    return <View><Text>Loading</Text></View>
+    return <Loading/>
   } else {
     return (
       <Stack.Navigator>
@@ -42,7 +43,8 @@ const AppStackNavigator = () => {
     );
   }
 }
-// username ? ()=> <ExamsScreen username={username} /> : 
-{/* <Stack.Screen name="UserScreen" component={username ? ExamsScreen : UserScreen} options = {{headerShown: false,}} initialParams={{username}} /> */}
 
 export default AppStackNavigator;
+
+// username ? ()=> <ExamsScreen username={username} /> : 
+{/* <Stack.Screen name="UserScreen" component={username ? ExamsScreen : UserScreen} options = {{headerShown: false,}} initialParams={{username}} /> */}

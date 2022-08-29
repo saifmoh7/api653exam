@@ -14,7 +14,11 @@ import {
   faUserPlus,
   faSignIn,
   faSignOut,
-  faHome
+  faHome,
+  faDeleteLeft,
+  faTrashCan,
+  faUpLong,
+  faUpload
 } from '@fortawesome/free-solid-svg-icons';
 import { TouchableOpacity } from 'react-native';
 
@@ -34,7 +38,9 @@ const Icon = (props) => {
        'signin' : faSignIn,
        'signout' : faSignOut,
        'circle-question':faCircleQuestion,
-       'home' : faHome
+       'home' : faHome,
+       'upgrade' : faUpload,
+       'delete' : faTrashCan
    }
    let { icon , ...attr } = props
   return <TouchableOpacity onPress={typeof props.onPress === 'function' ? props.onPress : () => {}}>

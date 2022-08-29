@@ -9,13 +9,12 @@ function NoOfQues({navigation, route}) {
   const examId = route.params.selectedExamId;
   const noQues = route.params.noQues
   const examTitle = route.params.examTitle
-  const userName = route.params.userName
 
   const [timer, setTimer] = useState('');
   const [noOfQ, setNoofq] = useState('');
 
   const checkNoOfQues = async  () => {
-    console.log(noQues)
+    
     if (noOfQ.trim().length == 0) {
       ToastAndroid.show('Number of Question is Empty', ToastAndroid.SHORT);
     }
@@ -31,12 +30,14 @@ function NoOfQues({navigation, route}) {
     else if (timer < 1) {
       ToastAndroid.show('Time for Exam is to Small', ToastAndroid.SHORT);
     }
-    else if (timer > 300) {
+    else if (timer > 60) {
       ToastAndroid.show('Time for Exam is to Long', ToastAndroid.SHORT);
     }
     else{
-      navigation.navigate({name : 'QuestionsScreen',params:{examId, examTitle, noOfQ, timer, userName}});
+      navigation.navigate({name : 'QuestionsScreen',params:{examId, examTitle, noOfQ, timer}});
       ToastAndroid.show('ok', ToastAndroid.SHORT);
+      setTimer("")
+      setNoofq("")
     }
   }
 

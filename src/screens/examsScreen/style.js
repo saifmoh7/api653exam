@@ -2,8 +2,14 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     master: {
-        position : 'relative',
         backgroundColor : "#242B3E",
+        flex : 1,
+        alignItems : 'center',
+        width: '100%',
+        height: '100%'
+    },
+
+    master1: {
         flex : 1,
         alignItems : 'center',
         width: '100%',
@@ -25,7 +31,13 @@ const styles = StyleSheet.create({
 
     appName: {
         color: '#ffffff',
-        fontSize: 20
+        fontSize: 20,
+    },
+
+    userName: {
+        color: '#ffffff',
+        fontSize: 20,
+        marginTop:30
     },
 
     scoreContainer : {

@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, BackHandler, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import Icon from '../../components/icons';
 import { getQuestionsList } from '../../utiles/database';
 import styles from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { off } from 'npm';
 const win = require('../../images/win.png')
 const fail = require('../../images/fail.png')
 
@@ -14,7 +13,6 @@ function QuestionsScreen({navigation, route}) {
   const examTitle = route.params.examTitle.toString()
   const time = route.params.timer*60
   const noOfQ = route.params.noOfQ
-  const userName = route.params.userName
 
   const intervalRef = useRef(null);
 
@@ -22,7 +20,7 @@ function QuestionsScreen({navigation, route}) {
   const [questions, setQuestions] = useState([]);
   const [submit, setSubmit] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [timer, setTimer] = useState("00:00:00");
+  const [timer, setTimer] = useState("00:00");
   const [examTime, setExamTime] = useState(0);
 
   const [state, setstate] = React.useReducer((prevState, data) => { return { ...prevState, ...data } }, {correctCount : 0, incorrectCount : 0, notattmpeted : parseInt(noOfQ), questionsState : {} });
@@ -87,9 +85,7 @@ function QuestionsScreen({navigation, route}) {
   function examTimer(examTime){
     let sec = Math.floor( (examTime) % 60 );
     let min = Math.floor( (examTime/60) % 60 );
-    let hours = Math.floor( (examTime/(60*60)) % 24 );
-    console.log(examTime,hours,min,sec)
-    let time = (hours > 9 ? hours : '0' + hours) + ':' + (min > 9 ? min : '0' + min) + ':' + (sec > 9 ? sec : '0' + sec)
+    let time =(min > 9 ? min : '0' + min) + ':' + (sec > 9 ? sec : '0' + sec)
     return time.toString()
   }
 
@@ -100,7 +96,7 @@ function QuestionsScreen({navigation, route}) {
   }
 
   function clearTimer(endtime){
-    setTimer("00:00:00");
+    setTimer("00:00");
     if (intervalRef.current) clearInterval(intervalRef.current);
     let count = 0
     const id = setInterval(() => {
@@ -112,16 +108,15 @@ function QuestionsScreen({navigation, route}) {
   }
 
   function startTimer(deadline){
-    let{total, hours, min, sec} = getTimeRemaining(deadline);
+    let{total, min, sec} = getTimeRemaining(deadline);
     if (total >= 0 && !submit) {
       setTimer(
-        (hours > 9 ? hours : '0' + hours) + ':' + (min > 9 ? min : '0' + min) + ':' + (sec > 9 ? sec : '0' + sec)
+        (min > 9 ? min : '0' + min) + ':' + (sec > 9 ? sec : '0' + sec)
       );
     } else {
       clearInterval(intervalRef.current);
       setSubmit(true)
       setShowResults(true)
-      // saveResults()
       console.log("timeup")
     }
   }
@@ -130,9 +125,8 @@ function QuestionsScreen({navigation, route}) {
     const total = Date.parse(endtime) - Date.parse(new Date());
     const sec = Math.floor( (total/1000) % 60 );
     const min = Math.floor( (total/1000/60) % 60 );
-    const hours = Math.floor( (total/1000*60*60) % 24 );
     return {
-      total, hours, min, sec
+      total, min, sec
     }
   }
 
@@ -249,6 +243,23 @@ function QuestionsScreen({navigation, route}) {
     } else {
       console.log({submit})
     }
+
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want leave the exam?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => navigation.navigate({name : 'ExamsScreen'}) }
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
   },[submit])
 
   return (
@@ -394,6 +405,10 @@ function QuestionsScreen({navigation, route}) {
 }
 
 export default QuestionsScreen
+
+
+// let hours = Math.floor( (examTime/(60*60)) % 24 );
+    // console.log(examTime, min, sec)
 
 {/* {
         showResults ? 

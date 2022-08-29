@@ -1,9 +1,8 @@
-import { View, Text, ToastAndroid, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, ToastAndroid, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from './style';
 import FormInput from '../../components/formInput';
 import Icon from '../../components/icons';
-import { signIn, signUp } from '../../utiles/database';
 import Footer from '../../components/footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -11,10 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const UserScreen = ({navigation}) => {
 
   const [userName, setUserName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [confirmPassword, setConfirmPassword] = useState('');
-  const [signup, setSignup] = useState(false);
 
   const checkNoOfQues = async  () => {
     if (userName.trim().length == 0) {
@@ -23,7 +18,7 @@ const UserScreen = ({navigation}) => {
     else{
           await AsyncStorage.setItem(
             'userData',
-            JSON.stringify({userName}),
+            JSON.stringify(userName),
             async e=>{
               let userData = await AsyncStorage.getItem('userData')
               console.log(userData)
@@ -32,30 +27,6 @@ const UserScreen = ({navigation}) => {
           navigation.navigate({name : 'ExamsScreen',params:{userName}});
         }
   }
-
-  // const getUserData = async() => {
-  //   try {
-  //     const userData = await AsyncStorage.getItem('userData')
-  //     if (userData !== null) {
-  //       let user_Data = JSON.parse(userData)
-  //       let username = user_Data.username
-  //       let emailAddress = user_Data.email
-  //       console.log(user_Data)
-  //       if (user_Data) {
-  //         navigation.navigate({name : 'ExamsScreen',params:{username, emailAddress}});
-  //       }else{
-  //         console.log('no User Data')
-  //       }
-  //     }
-  //     else{console.log({userData})}
-  //   } catch (error) {
-  //     console.log({error})
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getUserData()
-  // },[])
 
 
   return (
@@ -98,6 +69,14 @@ const UserScreen = ({navigation}) => {
     </SafeAreaView>
   )
 }
+
+export default UserScreen
+
+// const [signup, setSignup] = useState(false);
+
+// const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [confirmPassword, setConfirmPassword] = useState('');
 
 // const SignInScreen = ({navigation}) => {
 
@@ -296,4 +275,29 @@ const UserScreen = ({navigation}) => {
 // }
 
 
-export default UserScreen
+
+  // const getUserData = async() => {
+  //   try {
+  //     const userData = await AsyncStorage.getItem('userData')
+  //     if (userData !== null) {
+  //       let user_Data = JSON.parse(userData)
+  //       let username = user_Data.username
+  //       let emailAddress = user_Data.email
+  //       console.log(user_Data)
+  //       if (user_Data) {
+  //         navigation.navigate({name : 'ExamsScreen',params:{username, emailAddress}});
+  //       }else{
+  //         console.log('no User Data')
+  //       }
+  //     }
+  //     else{console.log({userData})}
+  //   } catch (error) {
+  //     console.log({error})
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getUserData()
+  // },[])
+
+
