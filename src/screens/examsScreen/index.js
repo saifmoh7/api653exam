@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, Image, SafeAreaView, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, Image, SafeAreaView, FlatList, Alert, BackHandler } from 'react-native'
 import Footer from '../../components/footer';
 import Icon from '../../components/icons';
-import { getExamsList } from '../../utiles/database';
+import { getExamsList, getVersion } from '../../utiles/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
+import { Version } from '../../components/loading-version';
 
 function ExamsScreen({navigation, route}) {
-  // let {navigation, route, ...attr} = props
   
-  // const userName = props?.userName || route?.params?.userName
+  
   const [allExames, setAllExames] = useState([])
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [versionStatus, setVersion] = useState(false)
   const [showDes, setShowDes] = useState([])
   const [highScore, setHighScore] = useState()
   const [latestScore, setLatestScore] = useState()
@@ -34,9 +35,7 @@ function ExamsScreen({navigation, route}) {
         setAllExames([...tempExams]);
         await AsyncStorage.setItem('exams', JSON.stringify([...tempExams]))
         
-      } else {
-        console.log("not found")
-      }
+      } else {console.log("not found")}
       setRefreshing(false);
     } catch (error) {
       console.log(error)
@@ -56,37 +55,28 @@ function ExamsScreen({navigation, route}) {
 
   const SelectedExam = (selectedExamId, noQues, examTitle) => {
     if (selectedExamId && noQues) {
-      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues, examTitle, userName}});
-    } else {
-      
-    }
+      navigation.navigate({name : 'NoOfQuestions',params:{selectedExamId, noQues, examTitle}});
+    } else {console.log("select exam error")}
   }
 
   const _retrieveData = async () => {
     try {
       var value = await AsyncStorage.getItem('your_Scores');
-      console.log(value)
       value = value===null ? [] : JSON.parse(value)
       let latestvalue = value[value.length-1]
-      console.log({latestvalue})
       if (typeof latestvalue !== 'object') {
         latestvalue = 0;
       }else{
         latestvalue = latestvalue.score
       }
       let highvalue = value.sort(({'score':score1}, {'score':score2}) => score1<score2 ? 1 : (score1>score2 ? -1 : 0))
-      // console.log({highvalue})
       if (typeof highvalue[0] !== 'object') {
         highvalue = 0;
       }else{
-        // console.log(highvalue[0])
         highvalue = highvalue[0].score
       }
-        // setAllScore(value)
         setHighScore(highvalue)
         setLatestScore(latestvalue)
-        // console.log(highvalue);
-        // console.log(latestvalue)
     } catch (error) {
       console.log(error.message)
     }
@@ -95,9 +85,8 @@ function ExamsScreen({navigation, route}) {
   const checkUserName = async() => {
     const username = await AsyncStorage.getItem('userData')
     let user_Name = JSON.parse(username)
-    console.log(user_Name)
     setUserName(user_Name)
-    if (userName) {
+    if (userName !== null) {
       getExams()
       _retrieveData()
     } else {
@@ -105,8 +94,52 @@ function ExamsScreen({navigation, route}) {
     }
   }
 
+  const checkVersion = async() => {
+    const version = `"0.0.1"`
+    const current_Version = await getVersion()
+
+    if (current_Version !== null) {
+      if (current_Version === version) {
+        setVersion(false)
+      } else {
+        setVersion(true)
+      }
+      await AsyncStorage.setItem('version',JSON.stringify(current_Version),)
+      console.log({current_Version, versionStatus})
+    } else {
+        console.log("no connection")
+        const current__Version = await AsyncStorage.getItem('version')
+        if (current__Version === version) {
+          setVersion(false)
+        } else {
+          setVersion(true)
+        }
+        console.log(current__Version, version)
+      }
+      console.log(versionStatus)
+  }
+
   useEffect(() => {
     checkUserName()
+    checkVersion()
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() }
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   },[userName])
 
   return (
@@ -120,77 +153,87 @@ function ExamsScreen({navigation, route}) {
       </View>
 
       {
-        userName ? 
-        <View>
-          <Text style = {{...styles.appName}}>
-              Welcome {userName}
-          </Text>
-        </View> : <React.Fragment></React.Fragment>
-      }
-
-      <TouchableOpacity
-        // disabled={!userName}
-        onPress={() => {
-          console.log(userName)
-          navigation.navigate({name : 'ScoresScreen'});
-        }}
-      >
-        <View style = {{...styles.scoreContainer}}>
-          <View style = {{...styles.score}}>
-            <Text>High Score</Text>
-            <Text>{highScore}%</Text>
+        versionStatus ? 
+        <Version/>
+        : <View style = {{...styles.master1}}>
+          <View>
+            <Text style = {{...styles.userName}}>
+                Welcome {userName}
+            </Text>
           </View>
-          <View style = {{...styles.line}}></View>
-          <View style = {{...styles.score}}>
-            <Text>Latest Score</Text>
-            <Text>{latestScore}%</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <FlatList
-        data = {allExames}
-        onRefresh = {getExams}
-        refreshing={refreshing}
-        showsVerticalScrollIndicator={false}
-        style = {{...styles.examsContainer}}
-        renderItem = {({item: exam}) => (
+          
           <TouchableOpacity
             onPress={() => {
-              SelectedExam(exam._id, exam.noQues, exam.examTitle)
+              console.log(userName)
+              navigation.navigate({name : 'ScoresScreen'});
             }}
-            style = {{...styles.tExamContainer}}
           >
-            <View style = {{...styles.examContainer}}>
-              <Image
-                    source = {{uri: exam.examImageUrl}}
-                    style = {{width : 60, height : 60, borderRadius : 15, backgroundColor: '#ffffff'}}
-              />
-              <View style = {{...styles.examDescription}}>
-                <Text style = {{fontSize: 16}}>{exam.examTitle}</Text>
-                {showDes.includes(exam._id) ? <Text style = {{fontSize: 12}}>{exam.examDes}</Text> : <React.Fragment></React.Fragment>}
+            <View style = {{...styles.scoreContainer}}>
+              <View style = {{...styles.score}}>
+                <Text>High Score</Text>
+                <Text>{highScore}%</Text>
               </View>
-              <Icon
-                    icon = "detail"
-                    size = {35}
-                    color = "#ffffff"
-                    onPress = {() => {
-                      if (showDes.includes(exam._id)) {
-                        setShowDes(showDes.filter(id => id != exam._id))
-                      }else{
-                        setShowDes([...showDes,exam._id])
-                      }
-                    }}
-              />
+              <View style = {{...styles.line}}></View>
+              <View style = {{...styles.score}}>
+                <Text>Latest Score</Text>
+                <Text>{latestScore}%</Text>
+              </View>
             </View>
           </TouchableOpacity>
-        )}
-      />
+
+          <FlatList
+            data = {allExames}
+            onRefresh = {getExams}
+            refreshing={refreshing}
+            showsVerticalScrollIndicator={false}
+            style = {{...styles.examsContainer}}
+            renderItem = {({item: exam}) => (
+              <TouchableOpacity
+                onPress={() => {
+                  SelectedExam(exam._id, exam.noQues, exam.examTitle)
+                }}
+                style = {{...styles.tExamContainer}}
+              >
+                <View style = {{...styles.examContainer}}>
+                  <Image
+                        source = {{uri: exam.examImageUrl}}
+                        style = {{width : 60, height : 60, borderRadius : 15, backgroundColor: '#ffffff'}}
+                  />
+                  <View style = {{...styles.examDescription}}>
+                    <Text style = {{fontSize: 16}}>{exam.examTitle}</Text>
+                    {showDes.includes(exam._id) ? <Text style = {{fontSize: 12}}>{exam.examDes}</Text> : <React.Fragment></React.Fragment>}
+                  </View>
+                  <Icon
+                        icon = "detail"
+                        size = {35}
+                        color = "#ffffff"
+                        onPress = {() => {
+                          if (showDes.includes(exam._id)) {
+                            setShowDes(showDes.filter(id => id != exam._id))
+                          }else{
+                            setShowDes([...showDes,exam._id])
+                          }
+                        }}
+                  />
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      }
 
       <Footer/>
     </SafeAreaView>
   )
 }
+
+export default ExamsScreen;
+
+
+
+// let {navigation, route, ...attr} = props
+  
+  // const userName = props?.userName || route?.params?.userName
 
 // function ExamsScreen(props) {
 //   let {navigation, route, ...attr} = props
@@ -405,7 +448,7 @@ function ExamsScreen({navigation, route}) {
 //     </SafeAreaView>
 //   )
 // }
-export default ExamsScreen;
+
 
 
 
