@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, Image, SafeAreaView, FlatList, Alert, BackHandler } from 'react-native'
+import { View, Text, TouchableOpacity, Image, SafeAreaView, FlatList, Alert, BackHandler, Linking } from 'react-native'
 import Footer from '../../components/footer';
 import Icon from '../../components/icons';
 import { getExamsList, getVersion } from '../../utiles/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
-import { Version } from '../../components/loading-version';
-
-function ExamsScreen({navigation, route}) {
+function ExamsScreen({navigation}) {
   
   
   const [allExames, setAllExames] = useState([])
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [versionStatus, setVersion] = useState(false)
   const [showDes, setShowDes] = useState([])
   const [highScore, setHighScore] = useState()
   const [latestScore, setLatestScore] = useState()
   const [userName, setUserName] = useState("")
-  const [examId, setExamId] = useState("")
 
   const getExams = async() => {
     setRefreshing(true);
@@ -95,7 +91,7 @@ function ExamsScreen({navigation, route}) {
   }
 
   const checkVersion = async() => {
-    const version = `"0.0.1"`
+    const version = "0.0.1"
     const current_Version = await getVersion()
 
     if (current_Version !== null) {
@@ -109,14 +105,27 @@ function ExamsScreen({navigation, route}) {
     } else {
         console.log("no connection")
         const current__Version = await AsyncStorage.getItem('version')
-        if (current__Version === version) {
+        const current___Version = JSON.parse(current__Version)
+        if (current___Version === version) {
           setVersion(false)
         } else {
           setVersion(true)
         }
-        console.log(current__Version, version)
+        console.log(current__Version, {version})
       }
       console.log(versionStatus)
+  }
+
+  const getoupgrade = async() => {
+    const url = "https://play.google.com/store/apps/details?id=host.exp.exponent"
+    // const url = await getUpgradeURL()
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
   }
 
   useEffect(() => {
@@ -133,7 +142,6 @@ function ExamsScreen({navigation, route}) {
       ]);
       return true;
     };
-
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       backAction
@@ -154,7 +162,27 @@ function ExamsScreen({navigation, route}) {
 
       {
         versionStatus ? 
-        <Version/>
+        <View style= {{...styles.versionContainer}}>
+          <Text style = {{fontSize: 20}}>We have new Version</Text>
+          <View style= {{...styles.iconContainer}}>
+            <Icon
+                  icon = "upgrade"
+                  size = {50}
+                  color = "#ffffff"
+                  onPress = {() => {
+                    getoupgrade()
+                  }}
+            />
+            <Icon
+                  icon = "home"
+                  size = {50}
+                  color = "#ffffff"
+                  onPress = {() => {
+                    setVersion(false)
+                  }}
+              />
+          </View>
+        </View>
         : <View style = {{...styles.master1}}>
           <View>
             <Text style = {{...styles.userName}}>
