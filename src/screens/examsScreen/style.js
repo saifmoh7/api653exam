@@ -100,8 +100,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '70%',
-    }
+    },
 
+    versionContainer: {
+        flex : 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        // backgroundColor:'#2E425A',
+    },
+
+    iconContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '60%',
+        marginTop: 30
+    }
 
 })
 

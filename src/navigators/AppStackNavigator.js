@@ -27,6 +27,7 @@ const AppStackNavigator = () => {
 
   useEffect(() => {
     checkUserName();
+    console.log({username})
   },[username])
 
   if (username==='') {

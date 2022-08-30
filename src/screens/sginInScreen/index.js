@@ -23,8 +23,9 @@ const UserScreen = ({navigation}) => {
               let userData = await AsyncStorage.getItem('userData')
               console.log(userData)
             }
-            )
+            )  
           navigation.navigate({name : 'ExamsScreen',params:{userName}});
+          setUserName("")
         }
   }
 

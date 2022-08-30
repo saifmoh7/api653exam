@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, FlatList, Image, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, FlatList, Image, ScrollView, Alert, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from './style';
 import Icon from '../../components/icons';
@@ -26,13 +26,30 @@ const ScoresScreen = ({navigation}) => {
   }
 
   const deleteData = async() => {
-    await AsyncStorage.removeItem('your_Scores')
-    await AsyncStorage.removeItem('userData')
-    navigation.navigate({name : 'UserScreen'});
+    Alert.alert("Hold on!", "Are you sure you want delete your scores and Re-register?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "YES", onPress: async() => {
+        await AsyncStorage.removeItem('your_Scores')
+        await AsyncStorage.removeItem('userData')
+        navigation.navigate({name : 'UserScreen'});
+      } }
+    ]);
   }
 
   useEffect(() => {
     getScores()
+    const backAction = () => {
+      navigation.goBack()
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
   },[])
   
   return (

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Text, ToastAndroid, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { BackHandler, Text, ToastAndroid, View } from 'react-native'
 import FormInput from '../../components/formInput';
 import Icon from '../../components/icons';
 import styles from './style';
@@ -40,6 +40,17 @@ function NoOfQues({navigation, route}) {
       setNoofq("")
     }
   }
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack()
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+  },[])
 
   return (
     <View style = {{...styles.master}}>
