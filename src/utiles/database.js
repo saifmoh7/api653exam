@@ -27,6 +27,15 @@ export const getVersion = async() => {
     }
 }
 
+export const getUpgradeURL = async() => {
+    try {
+        const {data} = await Axios.get('https://peaceful-temple-39268.herokuapp.com/api/users/version/url');
+        return data;
+    } catch (error) {
+        return null
+    }
+}
+
 // export const signUp = async(name, email, password) => {
 //     try {
 //         const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/users/signup', {name, email, password});
