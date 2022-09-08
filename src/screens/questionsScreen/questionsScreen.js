@@ -372,7 +372,7 @@ function QuestionsScreen({navigation, route}) {
                               <View style = {{...styles.option}}>
                                 <Text style={{fontSize: 14, color: '#000000'}}>{option}</Text>
                               </View>
-                            </TouchableOpacity> : <React.Fragment></React.Fragment>
+                            </TouchableOpacity> : <React.Fragment key={optionIndex}></React.Fragment>
                           })
                         }
                       {
@@ -384,7 +384,7 @@ function QuestionsScreen({navigation, route}) {
                     </View>
                     <View style = {{...styles.line}}></View>
                   </View>
-          } else {<React.Fragment></React.Fragment>}
+          } else { return <React.Fragment key={Math.floor(Math.random()*1000000)}></React.Fragment>}
         }}
       />
       <View style = {{...styles.iconContainer}}>
