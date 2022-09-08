@@ -33,9 +33,7 @@ const ScoresScreen = ({navigation}) => {
         style: "cancel"
       },
       { text: "YES", onPress: async() => {
-        await AsyncStorage.removeItem('your_Scores')
-        await AsyncStorage.removeItem('userData')
-        navigation.navigate({name : 'UserScreen'});
+        window.globalLogout()
       } }
     ]);
   }

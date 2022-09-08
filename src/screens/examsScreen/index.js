@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, Image, SafeAreaView, FlatList, Alert, BackHandler, Linking } from 'react-native'
 import Footer from '../../components/footer';
 import Icon from '../../components/icons';
-import { getExamsList, getVersion } from '../../utiles/database';
+import { getExamsList, getUpgradeURL, getVersion } from '../../utiles/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
+
 function ExamsScreen({navigation}) {
   
   
@@ -117,8 +118,8 @@ function ExamsScreen({navigation}) {
   }
 
   const getoupgrade = async() => {
-    const url = "https://play.google.com/store/apps/details?id=host.exp.exponent"
-    // const url = await getUpgradeURL()
+    // const url = "https://play.google.com/store/apps/details?id=host.exp.exponent"
+    const url = await getUpgradeURL()
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {
@@ -132,7 +133,7 @@ function ExamsScreen({navigation}) {
     checkUserName()
     checkVersion()
     const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+      Alert.alert("Hold on!", "Are you sure you want to exitApp?", [
         {
           text: "Cancel",
           onPress: () => null,

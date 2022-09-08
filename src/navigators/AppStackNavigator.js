@@ -13,7 +13,7 @@ var Stack = createStackNavigator();
 
 const AppStackNavigator = () => {
 
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState(undefined)
 
   const checkUserName = async() => {
     var username = await AsyncStorage.getItem('userData')
@@ -27,10 +27,18 @@ const AppStackNavigator = () => {
 
   useEffect(() => {
     checkUserName();
-    console.log({username})
   },[username])
 
-  if (username==='') {
+  useEffect(() => {
+    window.globalLogout = async () => {
+        await AsyncStorage.removeItem('your_Scores')
+        await AsyncStorage.removeItem('userData')
+        checkUserName();
+    }
+    checkUserName();
+  },[])
+
+  if (username === undefined) {
     return <Loading/>
   } else {
     return (
