@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, BackHandler, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, BackHandler, Dimensions, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import Icon from '../../components/icons';
 import { getQuestionsList } from '../../utiles/database';
 import styles from './style';
@@ -13,6 +13,8 @@ function QuestionsScreen({navigation, route}) {
   const examTitle = route.params.examTitle.toString()
   const time = route.params.timer*60
   const noOfQ = route.params.noOfQ
+
+  let {'width':sw} = Dimensions.get('screen')
 
   const intervalRef = useRef(null);
 
@@ -62,7 +64,6 @@ function QuestionsScreen({navigation, route}) {
           });
           
           let tempQues = shuffleArray([...tempQuestions])
-          console.log(tempQues);
           setQuestions(tempQues)
         }
       } catch (error) {
@@ -70,6 +71,8 @@ function QuestionsScreen({navigation, route}) {
       }
       setRefreshing(false)
     }
+    clearTimer(getDeadlineTime());
+    
   }
 
   const shuffleArray = array => {
@@ -117,7 +120,6 @@ function QuestionsScreen({navigation, route}) {
       clearInterval(intervalRef.current);
       setSubmit(true)
       setShowResults(true)
-      console.log("timeup")
     }
   }
 
@@ -214,15 +216,10 @@ function QuestionsScreen({navigation, route}) {
                 currntDate
               }
             ]
-            console.log(currntDate)
             
             await AsyncStorage.setItem(
               'your_Scores',
               JSON.stringify(your_Scores),
-              async e=>{
-                let yourScores = await AsyncStorage.getItem('your_Scores')
-                console.log(yourScores)
-              }
             );
           } catch (error) {
             console.log(error)
@@ -231,9 +228,6 @@ function QuestionsScreen({navigation, route}) {
 
   useEffect(() => {
     getQuestions(examId)
-
-    clearTimer(getDeadlineTime());
-
     return() => {if (intervalRef.current) clearInterval(intervalRef.current)};
   },[])
 
@@ -269,8 +263,8 @@ function QuestionsScreen({navigation, route}) {
           <Text style={{fontSize: 18, color: '#ffffff'}}>API 653 Exam</Text>
         </View>
         <View style = {{...styles.headerBar}}>
-          <Text>Not Attampeted/Total Ques. is {state.notattmpeted}/{noOfQ}</Text>
-          <Text>{timer} sec</Text>
+          <Text style = {{...styles.fontSize}}>Not Attampeted/Total Ques. is {state.notattmpeted}/{noOfQ}</Text>
+          <Text style = {{...styles.fontSize}}>{timer} sec</Text>
         </View>
       </View>
 
@@ -283,30 +277,30 @@ function QuestionsScreen({navigation, route}) {
               source={(state.correctCount*100/noOfQ) >= 50 ? win : fail}
               style = {{width : "60%", height : "80%"}}
               />
-              <Text>
+              <Text style = {{...styles.fontSize}}>
                 {Math.round(state.correctCount*100/noOfQ)}% Score
               </Text>
             </View>
             <View style = {{...styles.resultsrow}}>
               <View style = {{...styles.resultsColumn}}>
-                <Text>
+                <Text style = {{...styles.fontSize}}>
                   Total Questions: {noOfQ}
                 </Text>
-                <Text>
+                <Text style = {{...styles.fontSize}}>
                   Correct Awnser: {state.correctCount}
                 </Text>
-                <Text>
+                <Text style = {{...styles.fontSize}}>
                   Total Time: {examTimer(time)}
                 </Text>
               </View>
               <View style = {{...styles.resultsColumn}}>
-                <Text>
+                <Text style = {{...styles.fontSize}}>
                   Question Not Attmpeted: {state.notattmpeted}
                 </Text>
-                <Text>
+                <Text style = {{...styles.fontSize}}>
                   Incorrect Awnser: {state.incorrectCount}
                 </Text>
-                <Text>
+                <Text style = {{...styles.fontSize}}>
                   Spend Time: {examTimer(examTime)}
                 </Text>
               </View>
@@ -316,7 +310,6 @@ function QuestionsScreen({navigation, route}) {
 
       <FlatList
         data = {questions.map((question,index)=>({ index,...question}))}
-        onRefresh = {getQuestions}
         refreshing={refreshing}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i}
@@ -325,7 +318,7 @@ function QuestionsScreen({navigation, route}) {
           if (question.index < noOfQ) {
             return <View key={question.index} style = {{...styles.questionContainer}}>
                     <View style = {{...styles.question}}>
-                      <Text style={{fontSize: 16, color: '#ffffff'}}><Text style = {{color: state.questionsState.hasOwnProperty(question.index.toString()) ? '#28AFEA' : '#ffffff'}}>Q{question.index + 1}</Text> : {question.question}</Text>
+                      <Text style={{fontSize: sw*15/411.4, color: '#ffffff'}}><Text style = {{color: state.questionsState.hasOwnProperty(question.index.toString()) ? '#28AFEA' : '#ffffff'}}>Q{question.index + 1}</Text> : {question.question}</Text>
                     </View>
                     {
                       question.questionImageUrl ? 
@@ -333,7 +326,7 @@ function QuestionsScreen({navigation, route}) {
                           <Image
                             resizeMode="contain"
                             source={{uri: question.questionImageUrl}}
-                            style = {{width : 145, height : 100, borderRadius : 5, backgroundColor: '#ffffff'}}
+                            style = {{width : sw*145/411.4, height : sw*100/411.4, borderRadius : sw*5/411.4, backgroundColor: '#ffffff'}}
                           />
                         </View> :
                         <React.Fragment></React.Fragment>
@@ -346,7 +339,6 @@ function QuestionsScreen({navigation, route}) {
                             disabled={submit}
                             key={optionIndex}
                             onPress={() => {
-                              console.log(intervalRef.current)
                               let {correctCount, incorrectCount, notattmpeted, questionsState} = state
                               
                               if ( !questionsState.hasOwnProperty(String(question.index)) ) {
@@ -367,10 +359,10 @@ function QuestionsScreen({navigation, route}) {
                             style = {{...styles.optionContainer, backgroundColor: getOptionBg(option, question.correctAnswer, question.selectedOption)}}
                             >
                               <View style = {{...styles.choice}}>
-                                <Text style={{fontSize: 30, color: '#ffffff'}}>{choiceIcon(optionIndex)}</Text>
+                                <Text style={{fontSize: sw*30/411.4, color: '#ffffff'}}>{choiceIcon(optionIndex)}</Text>
                               </View>
                               <View style = {{...styles.option}}>
-                                <Text style={{fontSize: 14, color: '#000000'}}>{option}</Text>
+                                <Text style={{fontSize: sw*13/411.4, color: '#000000', margin: sw*2/411.4}}>{option}</Text>
                               </View>
                             </TouchableOpacity> : <React.Fragment key={optionIndex}></React.Fragment>
                           })
@@ -378,7 +370,7 @@ function QuestionsScreen({navigation, route}) {
                       {
                         submit ? 
                           <View style = {{...styles.ref}}>
-                            <Text style={{fontSize: 16}}>{question.source}</Text>
+                            <Text style = {{...styles.fontSize}}>{question.source}</Text>
                           </View> : <React.Fragment></React.Fragment>
                       }
                     </View>
@@ -390,7 +382,7 @@ function QuestionsScreen({navigation, route}) {
       <View style = {{...styles.iconContainer}}>
         <Icon
               icon = "c-check"
-              size = {60}
+              size = {sw*60/411.4}
               color = "#ffffff"
               onPress = {() => {
                 setShowResults(true)
@@ -405,129 +397,3 @@ function QuestionsScreen({navigation, route}) {
 }
 
 export default QuestionsScreen
-
-
-// let hours = Math.floor( (examTime/(60*60)) % 24 );
-    // console.log(examTime, min, sec)
-
-{/* {
-        showResults ? 
-          <View style = {{...styles.resultsContainer}}>
-            <Image
-            resizeMode="contain"
-            source={(state.correctCount*100/noOfQ) >= 50 ? win : fail}
-            style = {{width : "80%", height : "20%"}}
-            />
-            <Text>
-              {state.correctCount*100/noOfQ}% Score
-            </Text>
-            <Text>
-              Total Questions: {noOfQ}
-            </Text>
-            <Text>
-              Question Not Attmpeted: {state.notattmpeted}
-            </Text>
-            <Text>
-              Correct Awnser: {state.correctCount}
-            </Text>
-            <Text>
-              Incorrect Awnser: {state.incorrectCount}
-            </Text>
-            <Text>
-              Total Time: {examTimer(time)}
-            </Text>
-            <Text>
-              Spend Time: {examTimer(examTime)}
-            </Text>
-          </View> : <React.Fragment></React.Fragment>
-      } */}
-
-{/* <ScrollView style = {{...styles.questionsContainer}}>
-        <View style = {{...styles.questionContainer}}>
-          <View style = {{...styles.question}}>
-            <Text style={{fontSize: 16, color: '#ffffff'}}>Q1: The types of tanks covered by API 653 are:</Text>
-          </View>
-          <View style = {{...styles.optionsContainer}}>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>A</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>All answer.</Text>
-              </View>
-            </View>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>B</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>non-refrigerated.</Text>
-              </View>
-            </View>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>C</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>vertical, cylindrical, above ground closed and open topvugiuyi ihgihih ihi hih hiuhiuoh ihi ioh iou i hiohi ilhgil uhli lh il  ilhiluhiulhuihnuinl .</Text>
-              </View>
-            </View>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>D</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>built to API 650 and 12 C.</Text>
-              </View>
-            </View>
-            <View style = {{...styles.ref}}>
-                <Text style={{fontSize: 16}}>General (API 650 1.1.1)</Text>
-            </View>
-          </View>
-          <View style = {{...styles.line}}></View>
-        </View>
-
-        <View style = {{...styles.questionContainer}}>
-          <View style = {{...styles.question}}>
-            <Text style={{fontSize: 16, color: '#ffffff'}}>Q1: The types of tanks covered by API 653 are:</Text>
-          </View>
-          <View style = {{...styles.optionsContainer}}>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>A</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>All answer.</Text>
-              </View>
-            </View>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>B</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>non-refrigerated.</Text>
-              </View>
-            </View>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>C</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>vertical, cylindrical, above ground closed and open topvugiuyi ihgihih ihi hih hiuhiuoh ihi ioh iou i hiohi ilhgil uhli lh il  ilhiluhiulhuihnuinl .</Text>
-              </View>
-            </View>
-            <View style = {{...styles.optionContainer}}>
-              <View style = {{...styles.choice}}>
-                <Text style={{fontSize: 32, color: '#ffffff'}}>D</Text>
-              </View>
-              <View style = {{...styles.option}}>
-                <Text style={{fontSize: 14, color: '#000000'}}>built to API 650 and 12 C.</Text>
-              </View>
-            </View>
-            <View style = {{...styles.ref}}>
-                <Text style={{fontSize: 16}}>General (API 650 1.1.1)</Text>
-            </View>
-          </View>
-          <View style = {{...styles.line}}></View>
-        </View>
-      </ScrollView> */}

@@ -15,9 +15,7 @@ import {
   faSignIn,
   faSignOut,
   faHome,
-  faDeleteLeft,
   faTrashCan,
-  faUpLong,
   faUpload
 } from '@fortawesome/free-solid-svg-icons';
 import { TouchableOpacity } from 'react-native';
@@ -49,15 +47,3 @@ const Icon = (props) => {
 }
 
 export default Icon;
-
-
-
-
-
-
-// yarn add @fortawesome/react-native-fontawesome
-// yarn add @fortawesome/free-solid-svg-icons
-// yarn add reac-native-svg
-/**
- *  icon={'<name>'} size={<integer>} color={'<HEX-color>'}
- */

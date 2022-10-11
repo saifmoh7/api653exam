@@ -34,6 +34,7 @@ local.properties
 # node.js
 #
 node_modules/
+src/commets.js
 npm-debug.log
 yarn-error.log
 

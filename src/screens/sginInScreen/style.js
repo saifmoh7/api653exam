@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+let {'width':sw,'height':sh } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
     master: {
@@ -15,21 +17,20 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         justifyContent : 'space-evenly',
         alignItems: 'center',
-        padding: 15,
+        padding: sw*15/411.4,
         backgroundColor:'#2E425A',
-        height: 85,
+        height: sw*85/411.4,
         width: '100%',
-        borderBottomLeftRadius : 30,
-        borderBottomRightRadius : 30,
+        borderBottomLeftRadius : sw*30/411.4,
+        borderBottomRightRadius : sw*30/411.4,
     },
 
     appName: {
         color: '#ffffff',
-        fontSize: 20
+        fontSize: sw*20/411.4
     },
 
     scrollView: {
-        // backgroundColor: "#000000",
         width: '100%',
     },
 
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 40,
+        paddingVertical: sw*40/411.4,
         width: '100%',
     },
 
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     },
 
     icon: {
-        margin: 20,
+        margin: sw*20/411.4,
     }
 
 })

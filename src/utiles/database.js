@@ -2,25 +2,25 @@ import Axios, * as others from 'axios';
 
 export const getExamsList = async() => {
     try {
-        const {data} = await Axios.get('https://peaceful-temple-39268.herokuapp.com/api/exams/showexams');
+        const {data} = await Axios.get('https://exams-backend.saif7.com/api653/exams/showexams');
         return data;
     } catch (error) {
-        return error
+        return null
     }
 }
 
 export const getQuestionsList = async(examId) => {
     try {
-        const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/questions/showquestions', {examId});
+        const {data} = await Axios.post('https://exams-backend.saif7.com/api653/questions/showquestions', {examId});
         return data;
     } catch (error) {
-        return error
+        return null
     }
 }
 
-export const getVersion = async() => {
+export const getVersion = async() => {r
     try {
-        const {data} = await Axios.get('https://peaceful-temple-39268.herokuapp.com/api/users/version');
+        const {data} = await Axios.get('https://exams-backend.saif7.com/api653/users/version');
         return data;
     } catch (error) {
         return null
@@ -29,27 +29,9 @@ export const getVersion = async() => {
 
 export const getUpgradeURL = async() => {
     try {
-        const {data} = await Axios.get('https://peaceful-temple-39268.herokuapp.com/api/users/version/url');
+        const {data} = await Axios.get('https://exams-backend.saif7.com/api653/users/version/url');
         return data;
     } catch (error) {
         return null
     }
 }
-
-// export const signUp = async(name, email, password) => {
-//     try {
-//         const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/users/signup', {name, email, password});
-//         return data;
-//     } catch (error) {
-//         return error
-//     }
-// }
-
-// export const signIn = async(email, password) => {
-//     try {
-//         const {data} = await Axios.post('https://peaceful-temple-39268.herokuapp.com/api/users/signin', {email, password});
-//         return data;
-//     } catch (error) {
-//         return error
-//     }
-// }

@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+let {'width':sw,'height':sh } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
     master: {
@@ -18,9 +20,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#2E425A",
         width: '100%',
         height: '12%',
-        borderBottomLeftRadius : 30,
-        borderBottomRightRadius : 30,
-        padding: 15
+        borderBottomLeftRadius : sw*30/411.4,
+        borderBottomRightRadius : sw*30/411.4,
+        padding: sw*15/411.4
     },
 
     title: {
@@ -41,11 +43,6 @@ const styles = StyleSheet.create({
     },
 
     questionsContainer: {
-        // display: 'flex',
-        // alignItems: 'center',
-        // justifyContent: 'flex-start',
-        // flexDirection: 'column',
-        // marginTop: 10,
         width: '90%',
     },
 
@@ -55,15 +52,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'column',
         width: '100%',
-        marginTop: 5,
-        padding: 5,
+        marginTop: sw*5/411.4,
+        padding: sw*5/411.4,
     },
 
     question: {
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        marginVertical: 25,
+        marginVertical: sw*25/411.4,
         width: '100%',
     },
 
@@ -71,9 +68,9 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 150,
-        borderWidth: 2,
-        borderRadius: 5,
+        width: sw*150/411.4,
+        borderWidth: sw*2/411.4,
+        borderRadius: sw*2/411.4,
         borderColor: "#CCDDE7"
     },
 
@@ -91,9 +88,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'row',
         width: '100%',
-        padding: 5,
-        marginVertical: 10,
-        borderRadius: 30
+        padding: sw*5/411.4,
+        marginVertical: sw*10/411.4,
+        borderRadius: sw*30/411.4
     },
 
     choice: {
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '15%',
         backgroundColor: '#E78230',
-        borderRadius: 30
+        borderRadius: sw*30/411.4
     },
 
     option: {
@@ -120,15 +117,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        marginVertical: 20,
+        marginVertical: sw*20/411.4,
         borderBottomColor: '#ffffff',
-        borderBottomWidth: 2
+        borderBottomWidth: sw*2/411.4
     },
 
     iconContainer: {
         backgroundColor: '#007ACC',
-        borderRadius: 20,
-        padding: 2,
+        borderRadius: sw*20/411.4,
+        padding: sw*2/411.4,
         position: 'absolute',
         bottom: '3%',
         right:'3%'
@@ -140,9 +137,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        borderRadius: 20,
-        marginTop: 10,
-        padding: 2,
+        borderRadius: sw*20/411.4,
+        marginTop: sw*10/411.4,
+        padding: sw*2/411.4,
         width: '100%',
         height: '25%'
     },
@@ -152,7 +149,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        padding: 2,
+        padding: sw*2/411.4,
         margin: 0,
         width: '100%',
         height: '50%',
@@ -163,7 +160,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
-        padding: 2,
+        padding: sw*2/411.4,
         width: '100%',
     },
 
@@ -172,9 +169,14 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
         flexDirection: 'column',
-        paddingLeft: 7,
+        paddingLeft: sw*7/411.4,
         width: '45%',
     },
+
+    fontSize: {
+        fontSize: sw*14/411.4,
+        color: '#ffffff'
+    }
 
 })    
 

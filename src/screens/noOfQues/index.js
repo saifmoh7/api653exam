@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackHandler, Text, ToastAndroid, View } from 'react-native'
+import { BackHandler, ToastAndroid, View } from 'react-native'
 import FormInput from '../../components/formInput';
 import Icon from '../../components/icons';
 import styles from './style';
@@ -82,7 +82,6 @@ function NoOfQues({navigation, route}) {
                 color = "#E78230"
                 onPress={() => {
                     checkNoOfQues()
-                    console.log("go play")
                 }}
             />
             </View>

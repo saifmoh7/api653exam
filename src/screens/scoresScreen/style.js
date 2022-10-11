@@ -1,7 +1,7 @@
 import { StyleSheet , Dimensions } from "react-native";
 
 let {'width':sw,'height':sh } = Dimensions.get('screen')
-console.log({sw,sh})
+
 const styles = StyleSheet.create({
     master: {
         backgroundColor : "#242B3E",
@@ -16,24 +16,21 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 15,
+        padding: sw*15/411.4,
         backgroundColor:'#2E425A',
-        height: 85,
+        height: sw*85/411.4,
         width: '100%',
         borderBottomLeftRadius : sw*30/411.4,
-        borderBottomRightRadius : 30,
+        borderBottomRightRadius : sw*30/411.4,
     },
 
     appName: {
         color: '#ffffff',
-        fontSize: 20
+        fontSize: sw*20/411.4
     },
 
     scoresContainer: {
-        // display: 'flex',
-        // flexDirection: 'column',
         width: '100%',
-        // backgroundColor: 'green'
     },
 
     resultsContainer: {
@@ -42,11 +39,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        borderRadius: 20,
-        marginTop: 10,
-        padding: 2,
+        borderRadius: sw*20/411.4,
+        marginTop: sw*10/411.4,
+        padding: sw*2/411.4,
         width: '100%',
-        minHeight: 100
+        minHeight: sw*100/411.4
     },
 
     imageContainer: {
@@ -54,7 +51,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        padding: 2,
+        padding: sw*2/411.4,
         margin: 0,
         width: '100%',
     },
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
-        padding: 2,
+        padding: sw*2/411.4,
         width: '100%',
     },
 
@@ -73,9 +70,14 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
         flexDirection: 'column',
-        paddingLeft: 7,
+        paddingLeft: sw*2/411.4,
         width: '45%',
     },
+
+    fontSize: {
+        fontSize: sw*14/411.4,
+        color: '#ffffff'
+    }
 
 })
 

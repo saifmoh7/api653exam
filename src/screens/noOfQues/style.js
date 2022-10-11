@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+let {'width':sw,'height':sh } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
     master: {
@@ -18,9 +20,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: "#2E425A",
-        // borderWidth: 2,
-        // borderColor: '#ffffff',
-        borderRadius: 20
+        borderRadius: sw*20/411.4
     }
 })    
 

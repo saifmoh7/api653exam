@@ -1,4 +1,4 @@
-package com.api653exam.newarchitecture.components;
+package icu.saif.api653exam.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

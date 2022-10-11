@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+let {'width':sw,'height':sh } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
     master: {
@@ -21,35 +23,42 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 15,
+        padding: sw*15/411.4,
         backgroundColor:'#2E425A',
-        height: 85,
+        height: sw*85/411.4,
         width: '100%',
-        borderBottomLeftRadius : 30,
-        borderBottomRightRadius : 30,
+        borderBottomLeftRadius : sw*30/411.4,
+        borderBottomRightRadius : sw*30/411.4,
     },
 
     appName: {
         color: '#ffffff',
-        fontSize: 20,
+        fontSize: sw*15/411.4,
+    },
+
+    userNameView: {
+        display: "flex",
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: sw*30/411.4
     },
 
     userName: {
         color: '#ffffff',
-        fontSize: 20,
-        marginTop:30
+        fontSize: sw*15/411.4,
     },
 
     scoreContainer : {
-        height : 80,
+        height : sw*80/411.4,
         width : '88%' ,
-        marginBottom : 30,
-        marginTop : 50,
+        marginBottom : sw*30/411.4,
+        marginTop : sw*50/411.4,
         backgroundColor:'#E78230',
         display : 'flex',
         flexDirection : 'row',
         justifyContent: 'space-evenly',
-        borderRadius : 15,
+        borderRadius : sw*15/411.4,
         alignItems : 'center'
     },
 
@@ -82,16 +91,16 @@ const styles = StyleSheet.create({
 
     examContainer: {
         width: '90%',
-        height: 110,
+        height: sw*110/411.4,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#2E425A',
-        marginHorizontal: 10,
-        marginVertical: 10,
-        borderRadius : 15,
-        paddingHorizontal: 20
+        marginHorizontal: sw*10/411.4,
+        marginVertical: sw*10/411.4,
+        borderRadius : sw*15/411.4,
+        paddingHorizontal: sw*20/411.4
     },
 
     examDescription: {
@@ -108,7 +117,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         height: '100%',
-        // backgroundColor:'#2E425A',
     },
 
     iconContainer: {
@@ -117,7 +125,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '60%',
-        marginTop: 30
+        marginTop: sw*30/411.4
+    },
+
+    fontScore: {
+        fontSize: sw*16/411.4,
+        color: '#ffffff'
     }
 
 })

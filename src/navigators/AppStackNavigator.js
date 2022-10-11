@@ -54,6 +54,3 @@ const AppStackNavigator = () => {
 }
 
 export default AppStackNavigator;
-
-// username ? ()=> <ExamsScreen username={username} /> : 
-{/* <Stack.Screen name="UserScreen" component={username ? ExamsScreen : UserScreen} options = {{headerShown: false,}} initialParams={{username}} /> */}

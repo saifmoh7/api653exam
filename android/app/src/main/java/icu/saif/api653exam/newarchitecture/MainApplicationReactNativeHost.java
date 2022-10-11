@@ -1,4 +1,4 @@
-package com.api653exam.newarchitecture;
+package icu.saif.api653exam.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.api653exam.BuildConfig;
-import com.api653exam.newarchitecture.components.MainComponentsRegistry;
-import com.api653exam.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import icu.saif.api653exam.BuildConfig;
+import icu.saif.api653exam.newarchitecture.components.MainComponentsRegistry;
+import icu.saif.api653exam.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

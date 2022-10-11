@@ -1,4 +1,4 @@
-package com.api653exam;
+package icu.saif.api653exam;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
